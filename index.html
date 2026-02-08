@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>💖 ¿Quisieras ser mi san Valentín? 💖</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --rosa-fuerte: #ff69b4;
+      --rosa-medio: #ff1493;
+      --rosa-suave: #ffb6c1;
+      --rosa-pastel: #ffe4e1;
+      --rosa-claro: #fff0f5;
+      --blanco-trans: rgba(255, 245, 250, 0.96);
+      --texto-oscuro: #4a0d2e;
+      --texto-suave: #6b1d45;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      min-height: 100dvh;
+      background: linear-gradient(to bottom, #ff9ec1, #ffb6c1 40%, #ffe4e1);
+      color: var(--texto-oscuro);
+      overflow-x: hidden;
+      display: grid;
+      place-items: center;
+      background-attachment: fixed;
+    }
+
+    .floating-hearts-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .heart-bg {
+      position: absolute;
+      font-size: 1.5rem;
+      color: rgba(255, 105, 180, 0.55);
+      animation: floatBg linear infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes floatBg {
+      0% { transform: translateY(100dvh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.8; }
+      100% { transform: translateY(-20dvh) rotate(720deg); opacity: 0; }
+    }
+
+    .invitacion-container {
+      z-index: 10;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .recuadro-invitacion {
+      background: var(--blanco-trans);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2.5rem 1.8rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3), inset 0 0 30px rgba(255,105,180,0.2);
+      text-align: center;
+      border: 1px solid rgba(255,105,180,0.4);
+      position: relative;
+      z-index: 11;
+    }
+
+    .imagen-invitacion {
+      width: 80%;
+      max-width: 220px;
+      border-radius: 16px;
+      border: 5px solid var(--rosa-fuerte);
+      box-shadow: 0 10px 30px rgba(255,105,180,0.45);
+      margin-bottom: 1.5rem;
+      transition: transform 0.4s ease;
+    }
+
+    .imagen-invitacion:hover { transform: scale(1.06) rotate(2deg); }
+
+    .texto-invitacion {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #c71585;
+      margin-bottom: 1.8rem;
+      line-height: 1.4;
+    }
+
+    .texto-invitacion small {
+      font-size: 0.9em;
+      opacity: 0.85;
+      display: block;
+      margin-top: 0.3rem;
+    }
+
+    .botones-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      min-height: 80px;
+      padding: 15px 0;
+      position: relative;
+    }
+
+    button {
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      min-width: 130px;
+      touch-action: manipulation;
+    }
+
+    .btn-si {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+    }
+
+    .btn-si:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(255,105,180,0.5);
+    }
+
+    .btn-no {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.8);
+    }
+
+    .btn-no:hover {
+      background: #c62828;
+      transform: scale(1.08);
+    }
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 182, 193, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      place-items: center;
+      z-index: 1000;
+      padding: 15px;
+    }
+
+    .popup-overlay.activo { display: grid; }
+
+    .popup-contenido {
+      background: linear-gradient(145deg, #fff0f5, #ffe4e1);
+      padding: 2rem 1.5rem;
+      border-radius: 22px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(255,105,180,0.4);
+      text-align: center;
+      animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      z-index: 1001;
+      max-height: 90dvh;
+      overflow-y: auto;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7) translateY(50px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .popup-contenido h2 {
+      color: var(--rosa-fuerte);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 15px rgba(255,105,180,0.6);
+    }
+
+    .popup-contenido p {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+      opacity: 0.95;
+    }
+
+    #cerrarPopup {
+      margin-top: 1.5rem;
+      padding: 14px 32px;
+      background: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      min-width: 200px;
+    }
+
+    #cerrarPopup:hover {
+      transform: translateY(-3px);
+      background: #ff1493;
+    }
+
+    .heart-particle {
+      position: fixed;
+      font-size: 2.5rem;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0;
+      z-index: 2000;
+      animation: floatHeart linear forwards;
+    }
+
+    @keyframes floatHeart {
+      0% { transform: translateY(110dvh) rotate(0deg); opacity: 0.9; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-30dvh) rotate(1080deg); opacity: 0; }
+    }
+
+    .click-message {
+      position: fixed;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ff1493;
+      -webkit-text-stroke: 1px white;
+      text-shadow: 0 0 25px #fff, 0 0 50px var(--rosa-fuerte), 0 0 80px var(--rosa-medio);
+      pointer-events: none;
+      z-index: 3000;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      animation: floatUpMessage 2.2s ease-out forwards;
+    }
+
+    @keyframes floatUpMessage {
+      0%   { opacity: 0;   transform: translate(-50%, -30%) scale(0.6); }
+      20%  { opacity: 1;   transform: translate(-50%, -100%) scale(1.25); }
+      100% { opacity: 0;   transform: translate(-50%, -280%) scale(1); }
+    }
+
+    @media (max-width: 480px) {
+      body { font-size: 16px; }
+      .invitacion-container { padding: 15px; }
+      .recuadro-invitacion { padding: 2rem 1.2rem; border-radius: 20px; }
+      .imagen-invitacion { width: 85%; max-width: 200px; margin-bottom: 1.2rem; }
+      .texto-invitacion { font-size: 1.35rem; margin-bottom: 1.5rem; }
+      .botones-container { flex-direction: column; gap: 1.2rem; }
+      button { padding: 16px 40px; font-size: 1.15rem; min-width: 100%; min-height: 56px; }
+      .popup-overlay { padding: 10px; }
+      .popup-contenido { padding: 1.8rem 1.2rem; max-width: 95%; border-radius: 18px; }
+      .popup-contenido h2 { font-size: 1.9rem; }
+      .popup-contenido p { font-size: 1rem; }
+      .audio-embed-wrapper { max-width: 100%; margin: 1.5rem auto 1rem; padding: 8px; border-radius: 16px; }
+      .audio-embed-wrapper iframe { height: 180px !important; border-radius: 12px !important; }
+      .audio-credit { font-size: 0.78rem; margin-top: 4px; }
+      #cerrarPopup { padding: 14px 40px; min-width: 100%; font-size: 1.1rem; }
+      .click-message { font-size: 1.8rem; }
+    }
+
+    .audio-embed-wrapper {
+      width: 100%;
+      max-width: 340px;
+      margin: 1.8rem auto 1.5rem;
+      background: var(--blanco-trans);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 105, 180, 0.3);
+      box-shadow: 0 12px 35px rgba(255, 105, 180, 0.25);
+      overflow: hidden;
+      padding: 10px;
+      position: relative;
+    }
+
+    .audio-embed-wrapper iframe {
+      border-radius: 14px !important;
+      display: block;
+      width: 100%;
+      height: 204px;
+      border: none;
+    }
+
+    .audio-credit {
+      display: block;
+      text-align: center;
+      color: var(--rosa-medio);
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-top: 6px;
+      opacity: 0.9;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .audio-credit:hover {
+      color: var(--rosa-fuerte);
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floating-hearts-bg" id="heartsBg"></div>
+
+  <div class="invitacion-container">
+    <div class="recuadro-invitacion">
+      <img
+        src="https://i.pinimg.com/originals/dc/c2/c0/dcc2c0ff7bea0ba9069ec321fcfbee85.gif"
+        alt="Gif romántico"
+        class="imagen-invitacion"
+        loading="lazy"
+      >
+    
+      <p class="texto-invitacion">
+        ¿Quisieras ser mi san Valentín?<br>
+        <small>Mi hermosa niña</small>
+      </p>
+
+      <div class="botones-container" id="botonesContainer">
+        <button id="btnSi" class="btn-si">Sí 💖</button>
+        <button id="btnNo" class="btn-no">No...</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="popup" class="popup-overlay">
+    <div class="popup-contenido">
+      <h2>¡Muchas gracias mi amor! 🥹💕</h2>
+      <p>No sabes lo feliz que me haces… eres todo lo que siempre busqué, 
+        ante mis ojos eres perfecta tal y como eres, confió en Dios para que guie 
+        nuestra relación por el camino correcto y que nuestros seres queridos como mi abuelo 
+        Eduardo y tu abuelita shushi nos iluminen cuando veamos todo nublado, Te amo Arely. </p>
+
+      <p>We could be free, free<br>We can't fix it if we never face it<br>Let the past be the past 'til it's weightless</p>
+
+      <div class="audio-embed-wrapper">
+        <iframe src="https://audio.com/embed/audio/1842836749079114?theme=image" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen></iframe>
+        <a href="https://audio.com/jayonlinefr" class="audio-credit" target="_blank"></a>
+      </div>
+
+      <button id="cerrarPopup">Cerrar este mensaje 🩷</button>
+    </div>
+  </div>
+
+  <script>
+    const btnSi          = document.getElementById('btnSi');
+    const btnNo          = document.getElementById('btnNo');
+    const popup          = document.getElementById('popup');
+    const cerrarPopup    = document.getElementById('cerrarPopup');
+    const heartsBg       = document.getElementById('heartsBg');
+    const botonesContainer = document.getElementById('botonesContainer');
+
+    const mensajes = [
+      "¡Eres mi todo! ✨",
+      "¡Te amo! 💜",
+      "¡Mi patito lindo! 🦆💕",
+      "¡Mi cerecita dulce! 🍒",
+      "¡Gracias por decir sí! 🥹",
+      "¡Eres mi hogar! 🏡💖",
+      "Por fin... 🥹💗",
+      "No sabes cuánto te extrañé 💔➡️💖",
+      "¡Eres lo mejor que me ha pasado! 🌸",
+      "Te amo Arely... siempre 💕"
+    ];
+
+    let noClickCount = 0;
+    let mensajesHabilitados = false;
+
+    function createBgHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart-bg';
+      heart.textContent = ['💗','💖','❤️','🫶','💕'][Math.floor(Math.random()*5)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (12 + Math.random() * 18) + 's';
+      heart.style.animationDelay = Math.random() * 4 + 's';
+      heart.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+      heart.style.opacity = 0.4 + Math.random() * 0.4;
+      heartsBg.appendChild(heart);
+      setTimeout(() => heart.remove(), 35000);
+    }
+
+    for(let i = 0; i < 30; i++) createBgHeart();
+    setInterval(createBgHeart, 2000);
+
+    btnSi.addEventListener('click', () => {
+      mensajesHabilitados = true;
+      popup.classList.add('activo');
+      lanzarCorazones(25);
+    });
+
+    cerrarPopup.addEventListener('click', () => {
+      popup.classList.remove('activo');
+      mensajesHabilitados = false; // ← importante: desactivamos al cerrar
+
+      if (btnNo.parentNode !== botonesContainer) {
+        btnNo.remove();
+        botonesContainer.appendChild(btnNo);
+        btnNo.style.position = '';
+        btnNo.style.left = '';
+        btnNo.style.top = '';
+        btnNo.style.transform = '';
+        btnNo.style.zIndex = '';
+        btnNo.textContent = "No...";
+        noClickCount = 0;
+      }
+    });
+
+    btnNo.addEventListener('click', () => {
+      noClickCount++;
+      if (noClickCount === 1) {
+        document.body.appendChild(btnNo);
+        btnNo.style.position = 'fixed';
+        btnNo.style.zIndex = '30';
+      }
+      const maxX = window.innerWidth - btnNo.offsetWidth - 40;
+      const maxY = window.innerHeight - btnNo.offsetHeight - 40;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      const scale = 0.8 + Math.random() * 0.4;
+      const rotate = Math.random() * 30 - 15;
+      btnNo.style.left = x + 'px';
+      btnNo.style.top = y + 'px';
+      btnNo.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+      if (noClickCount >= 3) {
+        btnNo.textContent = ["¿Segura?", "No tan rápido...", "¡Ey!", "🥺", "piensalo..."][Math.floor(Math.random()*5)];
+      }
+    });
+
+    function lanzarCorazones(cant = 12) {
+      for (let i = 0; i < cant; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'heart-particle';
+          heart.textContent = ['❤️','💖','💗','💞','♥️'][Math.floor(Math.random()*5)];
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.bottom = '-15vh';
+          const dur = 7 + Math.random() * 8;
+          const delay = Math.random() * 1.2;
+          const size = 2.5 + Math.random() * 1.5;
+          heart.style.fontSize = size + 'rem';
+          heart.style.animationDuration = dur + 's';
+          heart.style.animationDelay = delay + 's';
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), (dur + delay + 1) * 1000);
+        }, i * 100);
+      }
+    }
+
+    document.addEventListener('click', e => {
+      // Solo procedemos si ya se dio "Sí"
+      if (!mensajesHabilitados) return;
+
+      // Ignoramos clics en:
+      // - botones
+      // - cualquier elemento dentro del popup
+      // - los propios mensajes flotantes (evita spam)
+      if (e.target.closest('button') || 
+          e.target.closest('.popup-contenido') || 
+          e.target.closest('.click-message')) {
+        return;
+      }
+
+      const msg = document.createElement('div');
+      msg.className = 'click-message';
+      msg.textContent = mensajes[Math.floor(Math.random() * mensajes.length)];
+      msg.style.left = e.clientX + 'px';
+      msg.style.top = e.clientY + 'px';
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 2200);
+    });
+  </script>
+</body>
+</html>
