@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños Arely 💙</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: 'Georgia', serif;
+}
+
+/* ── CANVAS ── */
+canvas#bg {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SURPRISE SCREEN ── */
+#surprise-screen {
+  position: fixed; inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+#surprise-screen.hide {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+.surprise-glow {
+  position: absolute;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(80,120,255,0.18) 0%, rgba(160,60,255,0.08) 50%, transparent 80%);
+  animation: pulse-bg 3s ease-in-out infinite alternate;
+}
+@keyframes pulse-bg {
+  from { transform: scale(0.9); opacity: 0.6; }
+  to   { transform: scale(1.15); opacity: 1; }
+}
+.surprise-emoji {
+  font-size: 3.2rem;
+  margin-bottom: 20px;
+  animation: bounce 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 16px rgba(160,60,255,0.7));
+  position: relative; z-index: 1;
+}
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-12px); }
+}
+#btn-surprise {
+  position: relative; z-index: 1;
+  padding: 18px 42px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #4a20cc, #8b2fff, #c040ff, #4a20cc);
+  background-size: 200% 200%;
+  animation: grad-move 3s ease infinite;
+  color: #fff;
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  cursor: pointer;
+  box-shadow:
+    0 0 20px rgba(140,47,255,0.7),
+    0 0 50px rgba(140,47,255,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  letter-spacing: 0.04em;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#btn-surprise:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 30px rgba(180,80,255,0.9), 0 0 70px rgba(140,47,255,0.5);
+}
+#btn-surprise:active { transform: scale(0.97); }
+@keyframes grad-move {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hint {
+  position: relative; z-index: 1;
+  margin-top: 18px;
+  font-size: 0.78rem;
+  color: rgba(200,170,255,0.5);
+  letter-spacing: 0.2em;
+  font-style: italic;
+  animation: fadeHint 2s 1.5s ease both;
+}
+@keyframes fadeHint {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+
+/* ── MAIN CONTENT ── */
+#main {
+  position: relative;
+  z-index: 10;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 1.4s 0.4s ease;
+  pointer-events: none;
+}
+#main.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* QUOTE */
+.quote {
+  text-align: center;
+  padding: 0 24px;
+  margin-bottom: 28px;
+  animation: none;
+}
+.quote p {
+  font-style: italic;
+  font-size: clamp(1rem, 3.8vw, 1.3rem);
+  line-height: 1.65;
+  color: #c0e8ff;
+  text-shadow: 0 0 14px #00cfff, 0 0 35px #0099ff, 0 0 70px rgba(0,180,255,0.3);
+}
+.heart {
+  display: inline-block;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.28); }
+}
+
+/* BOUQUET */
+.bouquet-wrap {
+  animation: floatUp 4s ease-in-out infinite alternate;
+}
+@keyframes floatUp {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-14px); }
+}
+
+/* TAGLINE */
+.tagline {
+  margin-top: 22px;
+  font-style: italic;
+  font-size: clamp(0.72rem, 2.4vw, 0.9rem);
+  color: rgba(190,160,255,0.55);
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 12px rgba(160,80,255,0.3);
+}
+
+/* PARTICLES */
+.particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: floatP var(--fd,8s) var(--fd-d,0s) ease-in infinite;
+  opacity: 0;
+}
+@keyframes floatP {
+  0%   { opacity:0; transform:translateY(0) scale(0.5); }
+  15%  { opacity:0.85; }
+  85%  { opacity:0.45; }
+  100% { opacity:0; transform:translateY(-78vh) scale(1.3); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- SURPRISE BUTTON SCREEN -->
+<div id="surprise-screen">
+  <div class="surprise-glow"></div>
+  <div class="surprise-emoji">🌷</div>
+  <button id="btn-surprise" onclick="reveal()">Presiona aquí para tu sorpresa</button>
+  <p class="hint">✦ algo especial te espera ✦</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <div class="quote">
+    <p>
+      "Te amo, Arely. Feliz cumpleaños,<br>
+      te voy a cuidar mucho, mi amor."
+      <span class="heart">💜</span>
+    </p>
+  </div>
+
+  <div class="bouquet-wrap">
+  <svg width="310" height="375" viewBox="0 0 310 375" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Filters -->
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="glow2" x="-70%" y="-70%" width="240%" height="240%">
+        <feGaussianBlur stdDeviation="9" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="3"/>
+      </filter>
+
+      <!-- BLUE petal gradients -->
+      <radialGradient id="pb" cx="50%" cy="65%" r="55%">
+        <stop offset="0%"   stop-color="#e0f4ff"/>
+        <stop offset="35%"  stop-color="#90ccff"/>
+        <stop offset="75%"  stop-color="#3a90e0"/>
+        <stop offset="100%" stop-color="#1040a0"/>
+      </radialGradient>
+      <radialGradient id="pb-sheen" cx="32%" cy="18%" r="60%">
+        <stop offset="0%"   stop-color="rgba(255,255,255,0.78)"/>
+        <stop offset="55%"  stop-color="rgba(180,230,255,0.18)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+
+      <!-- PURPLE petal gradients -->
+      <radialGradient id="pp" cx="50%" cy="65%" r="55%">
+        <stop offset="0%"   stop-color="#f0e0ff"/>
+        <stop offset="35%"  stop-color="#c080ff"/>
+        <stop offset="75%"  stop-color="#7020d0"/>
+        <stop offset="100%" stop-color="#3a0080"/>
+      </radialGradient>
+      <radialGradient id="pp-sheen" cx="32%" cy="18%" r="60%">
+        <stop offset="0%"   stop-color="rgba(255,255,255,0.75)"/>
+        <stop offset="55%"  stop-color="rgba(220,180,255,0.18)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+
+      <!-- Stem/leaf -->
+      <linearGradient id="stem" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#0b2c18"/>
+        <stop offset="50%"  stop-color="#1a5230"/>
+        <stop offset="100%" stop-color="#0b2c18"/>
+      </linearGradient>
+      <linearGradient id="leaf" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#2a7a40"/>
+        <stop offset="100%" stop-color="#0f3820"/>
+      </linearGradient>
+      <linearGradient id="leaf-sh" x1="0%" y1="0%" x2="60%" y2="100%">
+        <stop offset="0%"   stop-color="rgba(255,255,255,0.22)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+
+      <!-- Auras -->
+      <radialGradient id="aura-b" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="rgba(50,150,255,0.38)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+      <radialGradient id="aura-p" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="rgba(170,60,255,0.38)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+      <radialGradient id="aura-base" cx="50%" cy="40%" r="60%">
+        <stop offset="0%"   stop-color="rgba(120,60,255,0.22)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+    </defs>
+
+    <!-- BASE GLOW -->
+    <ellipse cx="155" cy="270" rx="100" ry="55" fill="url(#aura-base)" opacity="0.6"/>
+
+    <!-- ── STEMS ── -->
+    <line x1="155" y1="350" x2="112" y2="188" stroke="url(#stem)" stroke-width="5" stroke-linecap="round"/>
+    <line x1="155" y1="350" x2="200" y2="188" stroke="url(#stem)" stroke-width="5" stroke-linecap="round"/>
+    <line x1="153" y1="340" x2="78"  y2="228" stroke="url(#stem)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="157" y1="340" x2="232" y2="228" stroke="url(#stem)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="155" y1="350" x2="138" y2="175" stroke="url(#stem)" stroke-width="6" stroke-linecap="round"/>
+    <line x1="155" y1="350" x2="172" y2="175" stroke="url(#stem)" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- ── LEAVES ── -->
+    <g transform="translate(122,272) rotate(-42)"><ellipse rx="30" ry="11" fill="url(#leaf)"/><ellipse rx="30" ry="11" fill="url(#leaf-sh)"/></g>
+    <g transform="translate(188,258) rotate(40)"><ellipse rx="27" ry="10" fill="url(#leaf)"/><ellipse rx="27" ry="10" fill="url(#leaf-sh)"/></g>
+    <g transform="translate(104,295) rotate(-52)"><ellipse rx="22" ry="8"  fill="url(#leaf)"/></g>
+    <g transform="translate(206,290) rotate(50)"><ellipse rx="21" ry="8"  fill="url(#leaf)"/></g>
+    <g transform="translate(140,318) rotate(-36)"><ellipse rx="18" ry="7"  fill="url(#leaf)"/></g>
+    <g transform="translate(170,320) rotate(34)"><ellipse rx="17" ry="7"  fill="url(#leaf)"/></g>
+
+    <!-- ══ BLUE TULIP — back left ══ -->
+    <ellipse cx="112" cy="188" rx="30" ry="36" fill="url(#aura-b)" opacity="0.8" filter="url(#soft)"/>
+    <g transform="translate(112,188)" filter="url(#glow)">
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pb)"/>
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pb-sheen)" opacity="0.72"/>
+      <path d="M0,2 C-9,-5 -23,-20 -27,-44 C-31,-62 -25,-74 -21,-76 C-17,-78 -11,-62 -6,-46 C-2,-30 0,2 0,2Z" fill="url(#pb)" />
+      <path d="M0,2 C9,-5 23,-20 27,-44 C31,-62 25,-74 21,-76 C17,-78 11,-62 6,-46 C2,-30 0,2 0,2Z"  fill="url(#pb)" />
+      <path d="M0,2 C-11,-6 -15,-30 -9,-56 C-4,-72 0,-80 0,-80 C0,-80 4,-72 9,-56 C15,-30 11,-6 0,2Z" fill="url(#pb)"/>
+      <path d="M0,2 C-11,-6 -15,-30 -9,-56 C-4,-72 0,-80 0,-80 C0,-80 4,-72 9,-56 C15,-30 11,-6 0,2Z" fill="url(#pb-sheen)" opacity="0.6"/>
+      <circle cx="0" cy="-60" r="3.5" fill="#dff0ff" opacity="0.9"/>
+    </g>
+
+    <!-- ══ PURPLE TULIP — back right ══ -->
+    <ellipse cx="200" cy="188" rx="30" ry="36" fill="url(#aura-p)" opacity="0.8" filter="url(#soft)"/>
+    <g transform="translate(200,188)" filter="url(#glow)">
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pp)"/>
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pp-sheen)" opacity="0.72"/>
+      <path d="M0,2 C-9,-5 -23,-20 -27,-44 C-31,-62 -25,-74 -21,-76 C-17,-78 -11,-62 -6,-46 C-2,-30 0,2 0,2Z" fill="url(#pp)"/>
+      <path d="M0,2 C9,-5 23,-20 27,-44 C31,-62 25,-74 21,-76 C17,-78 11,-62 6,-46 C2,-30 0,2 0,2Z"  fill="url(#pp)"/>
+      <path d="M0,2 C-11,-6 -15,-30 -9,-56 C-4,-72 0,-80 0,-80 C0,-80 4,-72 9,-56 C15,-30 11,-6 0,2Z" fill="url(#pp)"/>
+      <path d="M0,2 C-11,-6 -15,-30 -9,-56 C-4,-72 0,-80 0,-80 C0,-80 4,-72 9,-56 C15,-30 11,-6 0,2Z" fill="url(#pp-sheen)" opacity="0.6"/>
+      <circle cx="0" cy="-60" r="3.5" fill="#f0deff" opacity="0.9"/>
+    </g>
+
+    <!-- ══ BLUE TULIP — far left small ══ -->
+    <ellipse cx="78" cy="228" rx="24" ry="28" fill="url(#aura-b)" opacity="0.7" filter="url(#soft)"/>
+    <g transform="translate(78,228) scale(0.8)" filter="url(#glow)">
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pb)"/>
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pb-sheen)" opacity="0.65"/>
+      <path d="M0,2 C-9,-5 -21,-18 -24,-40 C-27,-56 -21,-68 -17,-70 C-13,-72 -8,-56 -4,-40 C-1,-26 0,2 0,2Z" fill="url(#pb)"/>
+      <path d="M0,2 C9,-5 21,-18 24,-40 C27,-56 21,-68 17,-70 C13,-72 8,-56 4,-40 C1,-26 0,2 0,2Z"  fill="url(#pb)"/>
+      <circle cx="0" cy="-56" r="3" fill="#dff0ff" opacity="0.85"/>
+    </g>
+
+    <!-- ══ PURPLE TULIP — far right small ══ -->
+    <ellipse cx="232" cy="228" rx="24" ry="28" fill="url(#aura-p)" opacity="0.7" filter="url(#soft)"/>
+    <g transform="translate(232,228) scale(0.8)" filter="url(#glow)">
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pp)"/>
+      <path d="M0,0 C-15,-11 -22,-37 -13,-62 C-7,-78 0,-85 0,-85 C0,-85 7,-78 13,-62 C22,-37 15,-11 0,0Z" fill="url(#pp-sheen)" opacity="0.65"/>
+      <path d="M0,2 C-9,-5 -21,-18 -24,-40 C-27,-56 -21,-68 -17,-70 C-13,-72 -8,-56 -4,-40 C-1,-26 0,2 0,2Z" fill="url(#pp)"/>
+      <path d="M0,2 C9,-5 21,-18 24,-40 C27,-56 21,-68 17,-70 C13,-72 8,-56 4,-40 C1,-26 0,2 0,2Z"  fill="url(#pp)"/>
+      <circle cx="0" cy="-56" r="3" fill="#f0deff" opacity="0.85"/>
+    </g>
+
+    <!-- ══ BLUE TULIP — front left (main) ══ -->
+    <ellipse cx="138" cy="175" rx="38" ry="46" fill="url(#aura-b)" opacity="0.9" filter="url(#soft)"/>
+    <g transform="translate(138,175)" filter="url(#glow2)">
+      <path d="M0,0 C-17,-13 -26,-44 -15,-70 C-8,-88 0,-96 0,-96 C0,-96 8,-88 15,-70 C26,-44 17,-13 0,0Z" fill="url(#pb)"/>
+      <path d="M0,0 C-17,-13 -26,-44 -15,-70 C-8,-88 0,-96 0,-96 C0,-96 8,-88 15,-70 C26,-44 17,-13 0,0Z" fill="url(#pb-sheen)" opacity="0.75"/>
+      <path d="M0,4 C-11,-6 -28,-24 -32,-52 C-36,-72 -28,-86 -24,-88 C-20,-90 -13,-72 -8,-54 C-3,-34 0,4 0,4Z" fill="url(#pb)"/>
+      <path d="M0,4 C11,-6 28,-24 32,-52 C36,-72 28,-86 24,-88 C20,-90 13,-72 8,-54 C3,-34 0,4 0,4Z"  fill="url(#pb)"/>
+      <path d="M0,4 C-13,-7 -18,-35 -11,-64 C-6,-82 0,-90 0,-90 C0,-90 6,-82 11,-64 C18,-35 13,-7 0,4Z" fill="url(#pb)"/>
+      <path d="M0,4 C-13,-7 -18,-35 -11,-64 C-6,-82 0,-90 0,-90 C0,-90 6,-82 11,-64 C18,-35 13,-7 0,4Z" fill="url(#pb-sheen)" opacity="0.65"/>
+      <circle cx="0" cy="-68" r="4" fill="#e8f6ff" opacity="0.95"/>
+    </g>
+
+    <!-- ══ PURPLE TULIP — front right (main) ══ -->
+    <ellipse cx="172" cy="175" rx="38" ry="46" fill="url(#aura-p)" opacity="0.9" filter="url(#soft)"/>
+    <g transform="translate(172,175)" filter="url(#glow2)">
+      <path d="M0,0 C-17,-13 -26,-44 -15,-70 C-8,-88 0,-96 0,-96 C0,-96 8,-88 15,-70 C26,-44 17,-13 0,0Z" fill="url(#pp)"/>
+      <path d="M0,0 C-17,-13 -26,-44 -15,-70 C-8,-88 0,-96 0,-96 C0,-96 8,-88 15,-70 C26,-44 17,-13 0,0Z" fill="url(#pp-sheen)" opacity="0.75"/>
+      <path d="M0,4 C-11,-6 -28,-24 -32,-52 C-36,-72 -28,-86 -24,-88 C-20,-90 -13,-72 -8,-54 C-3,-34 0,4 0,4Z" fill="url(#pp)"/>
+      <path d="M0,4 C11,-6 28,-24 32,-52 C36,-72 28,-86 24,-88 C20,-90 13,-72 8,-54 C3,-34 0,4 0,4Z"  fill="url(#pp)"/>
+      <path d="M0,4 C-13,-7 -18,-35 -11,-64 C-6,-82 0,-90 0,-90 C0,-90 6,-82 11,-64 C18,-35 13,-7 0,4Z" fill="url(#pp)"/>
+      <path d="M0,4 C-13,-7 -18,-35 -11,-64 C-6,-82 0,-90 0,-90 C0,-90 6,-82 11,-64 C18,-35 13,-7 0,4Z" fill="url(#pp-sheen)" opacity="0.65"/>
+      <circle cx="0" cy="-68" r="4" fill="#f4e8ff" opacity="0.95"/>
+    </g>
+
+    <!-- BOW at base -->
+    <g transform="translate(155,350)">
+      <path d="M0,0 C-20,-9 -30,-4 -25,3 C-20,10 -8,7 0,0Z" fill="#3a18a0" opacity="0.75"/>
+      <path d="M0,0 C20,-9 30,-4 25,3 C20,10 8,7 0,0Z"  fill="#3a18a0" opacity="0.75"/>
+      <circle cx="0" cy="0" r="4.5" fill="#9050e0" opacity="0.9"/>
+    </g>
+  </svg>
+  </div>
+
+  <div class="tagline">✦ para siempre contigo ✦</div>
+</div>
+
+<script>
+// ── CANVAS: stars + shooting stars ──
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+// Static stars
+const STARS = Array.from({length:220}, () => ({
+  x: Math.random(), y: Math.random(),
+  r: Math.random()*1.6+0.3,
+  op: Math.random()*0.55+0.15,
+  phase: Math.random()*Math.PI*2,
+  speed: Math.random()*0.007+0.003,
+  hue: Math.random() < 0.4 ? 270 : 200   // purple or blue tint
+}));
+
+// Shooting stars pool
+const SHOOTERS = [];
+function spawnShooter() {
+  const angle = (Math.random()*30 + 20) * Math.PI/180; // 20-50 deg down-right
+  const speed = Math.random()*6 + 5;
+  SHOOTERS.push({
+    x: Math.random()*innerWidth,
+    y: Math.random()*(innerHeight*0.55),
+    vx: Math.cos(angle)*speed,
+    vy: Math.sin(angle)*speed,
+    len: Math.random()*140+80,
+    alpha: 1,
+    fade: Math.random()*0.012+0.008,
+    hue: Math.random() < 0.5 ? 260 : 200,
+    width: Math.random()*1.5+0.6
+  });
+}
+// spawn periodically
+setInterval(spawnShooter, 900);
+spawnShooter(); spawnShooter();
+
+function draw(t) {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // stars
+  STARS.forEach(s => {
+    const op = s.op * (0.5 + 0.5*Math.sin(t*s.speed+s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x*canvas.width, s.y*canvas.height, s.r, 0, Math.PI*2);
+    ctx.fillStyle = s.hue === 270
+      ? `rgba(210,170,255,${op})`
+      : `rgba(170,220,255,${op})`;
+    ctx.fill();
+  });
+
+  // shooting stars
+  for (let i = SHOOTERS.length-1; i >= 0; i--) {
+    const s = SHOOTERS[i];
+    const col = s.hue === 260 ? [180,100,255] : [100,200,255];
+    const grad = ctx.createLinearGradient(s.x, s.y, s.x - s.vx/s.speed*s.len*0.14, s.y - s.vy/s.speed*s.len*0.14);
+    grad.addColorStop(0, `rgba(${col},${s.alpha})`);
+    grad.addColorStop(1, `rgba(${col},0)`);
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    const tailFactor = s.len / Math.sqrt(s.vx*s.vx+s.vy*s.vy);
+    ctx.lineTo(s.x - s.vx*tailFactor*0.14, s.y - s.vy*tailFactor*0.14);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = s.width;
+    ctx.stroke();
+    // move
+    s.x += s.vx; s.y += s.vy;
+    s.alpha -= s.fade;
+    if (s.alpha <= 0 || s.x > canvas.width+100 || s.y > canvas.height+100) {
+      SHOOTERS.splice(i,1);
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw(0);
+
+// ── REVEAL ──
+function reveal() {
+  document.getElementById('surprise-screen').classList.add('hide');
+  document.getElementById('main').classList.add('show');
+  spawnParticles();
+  // burst of shooters
+  for(let i=0;i<5;i++) setTimeout(spawnShooter, i*180);
+}
+
+function spawnParticles() {
+  const colors = ['#80aaff','#c080ff','#ffffff','#a0d8ff','#e0b0ff','#60c0ff'];
+  for (let i = 0; i < 26; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random()*4+2;
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      background:${col};
+      box-shadow:0 0 ${size*2}px ${col};
+      left:${Math.random()*100}%;
+      bottom:${5+Math.random()*35}%;
+      --fd:${(Math.random()*5+6).toFixed(1)}s;
+      --fd-d:${(Math.random()*6).toFixed(1)}s;
+    `;
+    document.body.appendChild(p);
+  }
+}
+</script>
+</body>
+</html>
